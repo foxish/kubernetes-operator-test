@@ -14,12 +14,6 @@
   revision = "de5bf2ad457846296e2031421a34e2568e304e35"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/ant31/crd-validation"
-  packages = ["pkg"]
-  revision = "eabcf70a1bd73e9296fa0c5f57de604689200a1b"
-
-[[projects]]
   name = "github.com/emicklei/go-restful"
   packages = [
     ".",
@@ -273,15 +267,6 @@
   version = "kubernetes-1.9.0"
 
 [[projects]]
-  name = "k8s.io/apiextensions-apiserver"
-  packages = [
-    "pkg/apis/apiextensions",
-    "pkg/apis/apiextensions/v1beta1"
-  ]
-  revision = "98ecf7bbd60f9f11a72000e4f05203f542136219"
-  version = "kubernetes-1.9.0"
-
-[[projects]]
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/errors",
@@ -385,6 +370,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "eda02ca97347c2d464adc28950c0b95a97b1d93eb8c7b294c1a701a80a4c4a8a"
+  inputs-digest = "0dea117c435fe60f98f04a3c9a537ed7f9141f3bd81e9c85955cca525d37674d"
   solver-name = "gps-cdcl"
   solver-version = 1
