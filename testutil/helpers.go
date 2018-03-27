@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package framework
+package testutil
 
 import (
 	"fmt"
@@ -27,7 +27,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
-	"github.com/foxish/kubernetes-operator-test/framework/operatorutil"
 	"github.com/pkg/errors"
 )
 
@@ -57,7 +56,7 @@ func WaitForPodsReady(kubeClient kubernetes.Interface, namespace string, timeout
 
 		runningAndReady := 0
 		for _, p := range pl.Items {
-			isRunningAndReady, err := operatorutil.PodRunningAndReady(p)
+			isRunningAndReady, err := PodRunningAndReady(p)
 			if err != nil {
 				return false, err
 			}

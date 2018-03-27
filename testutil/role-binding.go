@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package framework
+package testutil
 
 import (
 	rbacv1 "k8s.io/api/rbac/v1"
