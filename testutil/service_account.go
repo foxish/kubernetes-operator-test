@@ -45,7 +45,6 @@ func parseServiceAccountYaml(relativPath string) (*v1.ServiceAccount, error) {
 	if err := yaml.NewYAMLOrJSONDecoder(manifest, 100).Decode(&serviceAccount); err != nil {
 		return nil, err
 	}
-
 	return &serviceAccount, nil
 }
 
