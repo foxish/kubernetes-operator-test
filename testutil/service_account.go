@@ -36,13 +36,32 @@ func CreateServiceAccount(kubeClient kubernetes.Interface, namespace string, rel
 }
 
 func parseServiceAccountYaml(relativPath string) (*v1.ServiceAccount, error) {
-	manifest, err := PathToOSFile(relativPath)
-	if err != nil {
+	var manifest *os.File
+	var err error
+
+	var serviceAccount v1.ServiceAccount
+	if manifest, err = PathToOSFile(relativPath); err != nil {
 		return nil, err
 	}
 
-	serviceAccount := v1.ServiceAccount{}
-	if err := yaml.NewYAMLOrJSONDecoder(manifest, 100).Decode(&serviceAccount); err != nil {
+	decoder := yaml.NewYAMLOrJSONDecoder(manifest, 100)
+	for {
+		var out unstructured.Unstructured
+		err = decoder.Decode(&out)
+		if err != nil {
+			// this would indicate it's malformed YAML.
+			break
+		}
+
+		if out.GetKind() == "ServiceAccount" {
+			var marshaled []byte
+			marshaled, err = out.MarshalJSON()
+			json.Unmarshal(marshaled, &serviceAccount)
+			break
+		}
+	}
+
+	if err != io.EOF && err != nil {
 		return nil, err
 	}
 	return &serviceAccount, nil
