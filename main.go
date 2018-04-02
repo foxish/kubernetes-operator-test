@@ -7,10 +7,11 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 
 	"github.com/foxish/kubernetes-operator-test/testutil"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 )
 
 func main() {
-	config, err := clientcmd.BuildConfigFromFlags("", "/usr/local/google/home/ramanathana/.kube/config")
+	config, err := clientcmd.BuildConfigFromFlags("", "/home/ramanathana/.kube/config")
 	if err != nil {
 		fmt.Println(err, "build config from flags failed")
 	}

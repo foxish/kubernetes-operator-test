@@ -15,8 +15,13 @@
 package testutil
 
 import (
+	"encoding/json"
+	"io"
+	"os"
+
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/client-go/kubernetes"
 )
@@ -65,7 +70,7 @@ func parseClusterRoleYaml(relativePath string) (*rbacv1.ClusterRole, error) {
 	var err error
 
 	var clusterRole rbacv1.ClusterRole
-	if manifest, err = PathToOSFile(relativPath); err != nil {
+	if manifest, err = PathToOSFile(relativePath); err != nil {
 		return nil, err
 	}
 

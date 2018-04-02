@@ -15,7 +15,12 @@
 package testutil
 
 import (
+	"encoding/json"
+	"io"
+	"os"
+
 	"k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/client-go/kubernetes"
 )
@@ -35,12 +40,12 @@ func CreateServiceAccount(kubeClient kubernetes.Interface, namespace string, rel
 	return finalizerFn, nil
 }
 
-func parseServiceAccountYaml(relativPath string) (*v1.ServiceAccount, error) {
+func parseServiceAccountYaml(relativePath string) (*v1.ServiceAccount, error) {
 	var manifest *os.File
 	var err error
 
 	var serviceAccount v1.ServiceAccount
-	if manifest, err = PathToOSFile(relativPath); err != nil {
+	if manifest, err = PathToOSFile(relativePath); err != nil {
 		return nil, err
 	}
 
