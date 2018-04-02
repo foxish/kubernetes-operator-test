@@ -63,15 +63,33 @@ func DeleteClusterRoleBinding(kubeClient kubernetes.Interface, relativePath stri
 }
 
 func parseClusterRoleBindingYaml(relativePath string) (*rbacv1.ClusterRoleBinding, error) {
-	manifest, err := PathToOSFile(relativePath)
-	if err != nil {
+	var manifest *os.File
+	var err error
+
+	var clusterRoleBinding rbacv1.ClusterRoleBinding
+	if manifest, err = PathToOSFile(relativPath); err != nil {
 		return nil, err
 	}
 
-	clusterRoleBinding := rbacv1.ClusterRoleBinding{}
-	if err := yaml.NewYAMLOrJSONDecoder(manifest, 100).Decode(&clusterRoleBinding); err != nil {
-		return nil, err
+	decoder := yaml.NewYAMLOrJSONDecoder(manifest, 100)
+	for {
+		var out unstructured.Unstructured
+		err = decoder.Decode(&out)
+		if err != nil {
+			// this would indicate it's malformed YAML.
+			break
+		}
+
+		if out.GetKind() == "ClusterRoleBinding" {
+			var marshaled []byte
+			marshaled, err = out.MarshalJSON()
+			json.Unmarshal(marshaled, &clusterRoleBinding)
+			break
+		}
 	}
 
+	if err != io.EOF && err != nil {
+		return nil, err
+	}
 	return &clusterRoleBinding, nil
 }

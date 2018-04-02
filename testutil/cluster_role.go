@@ -61,15 +61,33 @@ func DeleteClusterRole(kubeClient kubernetes.Interface, relativePath string) err
 }
 
 func parseClusterRoleYaml(relativePath string) (*rbacv1.ClusterRole, error) {
-	manifest, err := PathToOSFile(relativePath)
-	if err != nil {
+	var manifest *os.File
+	var err error
+
+	var clusterRole rbacv1.ClusterRole
+	if manifest, err = PathToOSFile(relativPath); err != nil {
 		return nil, err
 	}
 
-	clusterRole := rbacv1.ClusterRole{}
-	if err := yaml.NewYAMLOrJSONDecoder(manifest, 100).Decode(&clusterRole); err != nil {
-		return nil, err
+	decoder := yaml.NewYAMLOrJSONDecoder(manifest, 100)
+	for {
+		var out unstructured.Unstructured
+		err = decoder.Decode(&out)
+		if err != nil {
+			// this would indicate it's malformed YAML.
+			break
+		}
+
+		if out.GetKind() == "ClusterRole" {
+			var marshaled []byte
+			marshaled, err = out.MarshalJSON()
+			json.Unmarshal(marshaled, &clusterRole)
+			break
+		}
 	}
 
+	if err != io.EOF && err != nil {
+		return nil, err
+	}
 	return &clusterRole, nil
 }
